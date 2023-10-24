@@ -51,6 +51,7 @@ const MediaItem: FC<MediaItemProps> = ({
           src={imageUrl || '/images/liked.png'}
           alt='media item'
           className='object-cover'
+          priority={true}
         />
       </div>
       <div className="

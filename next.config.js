@@ -4,7 +4,8 @@ const nextConfig = {
     domains: [
       'alqcojjcftxmuurybmdn.supabase.co'
     ]
-  }
+  },
+  
 }
 
 module.exports = nextConfig
