@@ -17,3 +17,4 @@ This is repository for my uncommercial Spotify-like music app. It is created to 
 - Custom user playlists
 - Profile settings
 - The whole album download with multiple songs at the same time
+- and much more...
