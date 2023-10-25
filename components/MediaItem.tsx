@@ -6,7 +6,7 @@ import { FC } from 'react'
 
 interface MediaItemProps {
   data: Song;
-  onClick: (id: string) => void;
+  onClick?: (id: string) => void;
   
 }
 
