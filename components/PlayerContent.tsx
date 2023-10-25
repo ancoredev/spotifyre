@@ -16,15 +16,19 @@ import usePlayer from '@/hooks/usePlayer';
 interface PlayerContentProps {
   song: Song;
   songUrl: string;
+  volume: number;
+  setVolume: (volume: number) => void;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
   song,
-  songUrl
+  songUrl,
+  volume,
+  setVolume
 }) => {
   // TODO: storage for volume and etc. for the whole playlist
   const player = usePlayer();
-  const [ volume, setVolume ] = useState(1);
+  
   const [ isPlaying, setIsPlaying ] = useState(false);
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;

@@ -10,6 +10,7 @@ import { Song } from '@/types';
 import usePlayer from '@/hooks/usePlayer';
 import { twMerge } from 'tailwind-merge';
 import useOnPlay from '@/hooks/useOnPlay';
+import { BsSpotify } from 'react-icons/bs';
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -46,6 +47,10 @@ const Sidebar: FC<SidebarProps> = ({
       <div className='hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] p-2'>
         <Box>
           <div className='flex flex-col gap-y-4 px-5 py-4'>
+            <div className='flex flex-row mb-4 items-center justify-start gap-x-2'>
+              <BsSpotify size={40}/>
+              <div className="text-lg font-semibold">Spotify<span className="text-green-400">RE</span></div>
+            </div>
             {routes.map((item) => (
               <SidebarItem key={item.label} {...item}/>
             ))}
