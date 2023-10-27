@@ -12,27 +12,24 @@ import LikeButton from './LikeButton';
 import Slider from './Slider';
 import usePlayer from '@/hooks/usePlayer';
 
+import type { PlayerStore } from '@/hooks/usePlayer';
+
 
 interface PlayerContentProps {
   song: Song;
   songUrl: string;
-  volume: number;
-  setVolume: (volume: number) => void;
+  player: PlayerStore;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
   song,
   songUrl,
-  volume,
-  setVolume
+  player
 }) => {
-  // TODO: storage for volume and etc. for the whole playlist
-  const player = usePlayer();
-  
   const [ isPlaying, setIsPlaying ] = useState(false);
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
-  const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
+  const VolumeIcon = player.isMuted ? HiSpeakerXMark : HiSpeakerWave;
 
   const onPlayNext = () => {
     if (player.ids.length === 0) return;
@@ -59,7 +56,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   const [play, { pause, sound }] = useSound(
     songUrl,
     {
-      volume: volume,
+      volume: player.isMuted ? 0 : player.volume,
       onplay: () => setIsPlaying(true),
       onend: () => {
         setIsPlaying(false);
@@ -81,10 +78,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     else pause();
   }
 
-  const toggleMute = () => {
-    if (volume === 0) setVolume(1);
-    else setVolume(0);
-  }
 
   return (
     <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
@@ -174,13 +167,14 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       <div className="hidden md:flex w-full justify-end pr-2">
         <div className="flex items-center gap-x-2 w-[120px]">
           <VolumeIcon 
-            onClick={toggleMute}
+            onClick={() => player.toggleMute()}
             className="cursor-pointer"
             size={34}
           />
           <Slider 
-            value={volume}
-            onChange={(value) => setVolume(value)}
+            value={player.volume}
+            isMuted={player.isMuted}
+            onChange={(value) => player.setVolume(value)}
           />
         </div>
       </div>

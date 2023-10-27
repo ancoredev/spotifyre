@@ -4,11 +4,13 @@ import * as RadixSlider from "@radix-ui/react-slider"
 interface SliderProps {
   value?: number;
   onChange?: (value: number) => void;
+  isMuted: boolean;
 }
 
 const Slider: FC<SliderProps> = ({
   value = 1,
-  onChange
+  onChange,
+  isMuted
 }) => {
   const handleChange = (newValue: number[]) => {
     onChange?.(newValue[0]);
@@ -24,7 +26,7 @@ const Slider: FC<SliderProps> = ({
         w-full
         h-10'
       defaultValue={[1]}
-      value={[value]}
+      value={isMuted ? [0] : [value]}
       onValueChange={handleChange}
       max={1}
       step={0.05}

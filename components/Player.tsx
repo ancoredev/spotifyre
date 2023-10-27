@@ -4,14 +4,11 @@ import useGetSongById from "@/hooks/useGetSongByid";
 import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 import usePlayer from "@/hooks/usePlayer";
 import PlayerContent from "./PlayerContent";
-import { useState } from "react";
 
 const Player = () => {
   const player = usePlayer();
+
   const { song } = useGetSongById(player.activeId);
-
-  const [ volume, setVolume ] = useState(1);
-
   const songUrl = useLoadSongUrl(song!);
 
   if (!song || !songUrl || !player.activeId) return null;
@@ -30,8 +27,7 @@ const Player = () => {
         key={songUrl} 
         song={song}
         songUrl={songUrl}
-        volume={volume}
-        setVolume={setVolume}
+        player={player}
       />
     </div>
   )
