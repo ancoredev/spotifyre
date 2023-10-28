@@ -1,6 +1,6 @@
 'use client'
 import useLoadImage from '@/hooks/useLoadImage';
-import usePlayer from '@/hooks/usePlayer';
+import usePlaylist from '@/hooks/usePlaylist';
 import { Song } from '@/types';
 import Image from 'next/image';
 import { FC } from 'react'
@@ -16,7 +16,7 @@ const MediaItem: FC<MediaItemProps> = ({
   onClick
 }) => {
   const imageUrl = useLoadImage(data);
-  const player = usePlayer();
+  const playlist = usePlaylist();
 
   const handleClick = () => {
     if (onClick) {
@@ -24,7 +24,7 @@ const MediaItem: FC<MediaItemProps> = ({
     }
 
     // default turn on player
-    return player.setId(data.id)
+    return playlist.setId(data.id)
   }
   return (
     <div

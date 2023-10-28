@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export interface PlayerStore {
+export interface PlaylistStore {
   ids: string[];
   activeId?: string;
 
@@ -12,10 +12,10 @@ export interface PlayerStore {
   setVolume: (volume: number) => void;
 
   isMuted: boolean;
-  toggleMute: () => void;
+  setMuted: (mute: boolean) => void;
 }
 
-const usePlayer = create<PlayerStore>((set) => ({
+const usePlaylist = create<PlaylistStore>((set) => ({
   ids: [],
   activeId: undefined,
 
@@ -23,12 +23,11 @@ const usePlayer = create<PlayerStore>((set) => ({
   setIds: (ids: string[]) => set({ ids: ids }),
   reset: () => set({ ids: [], activeId: undefined}),
 
-  volume: 1,
+  volume: 0.75,
   setVolume: (volume: number) => set({ volume: volume, isMuted: false }),
 
   isMuted: false,
-  toggleMute: () => set((state) => ({ isMuted: !state.isMuted }))
-
+  setMuted: (mute: boolean) => set({ isMuted: mute })
 }));
 
-export default usePlayer;
+export default usePlaylist;
