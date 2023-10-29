@@ -10,7 +10,7 @@ import ToasterProvider from '@/providers/ToasterProvider';
 import getSongsByUserId from '@/actions/getSongsByUserId';
 import Player from '@/components/Player';
 
-const font = Figtree({ subsets: ['latin'] })
+const font = Figtree({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Spotifyre',

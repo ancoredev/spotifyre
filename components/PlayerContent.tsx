@@ -3,14 +3,20 @@
 import { BsPauseFill, BsPlayFill } from 'react-icons/bs'
 import { AiFillStepBackward, AiFillStepForward } from 'react-icons/ai';
 import { HiSpeakerXMark, HiSpeakerWave } from 'react-icons/hi2'
-import { useEffect, useState } from 'react';
+import { CircularProgress, createTheme } from '@mui/material';
+import { MouseEventHandler, useEffect } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 
 import { Song } from '@/types';
 import MediaItem from './MediaItem';
 import LikeButton from './LikeButton';
-import Slider from './Slider';
+import { Slider } from '@mui/material'
 import usePlaylist from '@/hooks/usePlaylist';
+import { useAudioTime } from '@/hooks/useAudioTime';
+import { formatTime } from '@/utils/utils';
+
+import { mainTheme } from '@/utils/theme';
+import { ThemeProvider } from '@mui/system';
 
 
 interface PlayerContentProps {
@@ -24,6 +30,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
 }) => {
   const sound = useGlobalAudioPlayer();
   const playlist = usePlaylist();
+
+  const { position, setPosition } = useAudioTime();
 
   const Icon = sound.playing ? BsPauseFill : BsPlayFill;
   const VolumeIcon = sound.muted ? HiSpeakerXMark : HiSpeakerWave;
@@ -52,8 +60,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
 
 
   // TODO: bind volume and mute playlist with sound
-  const handleChangeVolume = (value: number) => {
-    if (value === 0) {
+  const handleChangeVolume = (event: Event, value: number | number[], activeThumb: number) =>  {
+    if (value as number === 0) {
       playlist.setMuted(true);
       sound.mute(true);
     } else {
@@ -61,8 +69,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       sound.mute(false);
     }
 
-    sound.setVolume(value);
-    playlist.setVolume(value);
+    sound.setVolume(value as number);
+    playlist.setVolume(value as number);
   }
 
   const handleMuteToggle = () => {
@@ -73,7 +81,20 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       playlist.setMuted(true);
       sound.mute(true);
     }
+  }
 
+  const handleTimeChange = (
+    event: Event, 
+    value: number | number[],
+    activeThumb: number
+  ) => {
+    sound.pause();
+    sound.seek(value as number);
+    setPosition(value as number);
+  }
+
+  const handleTimeChangeCommit: MouseEventHandler<HTMLSpanElement> = () => {
+    sound.play();
   }
 
   useEffect(() => {
@@ -88,7 +109,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
 
 
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
+    <ThemeProvider theme={mainTheme}>
+    <div className='grid grid-cols-2 md:grid-cols-3 h-full content-center'>
       <div className='flex w-full justify-start'>
         <div className="flex items-center gap-x-4">
           <MediaItem data={song} />
@@ -105,22 +127,26 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         justify-end
         items-center
       '>
-        <div 
-          onClick={() => sound.togglePlayPause()}
-          className='
-            h-10
-            w-10
-            flex
-            items-center
-            justify-center
-            rounded-full
-            bg-white
-            p-1
-            cursor-pointer
-          '
-        >
-          <Icon size={30} className="text-black"/>
-        </div>
+        { 
+          sound.isLoading
+          ? <CircularProgress color="inherit" />
+          : <div 
+              onClick={() => sound.togglePlayPause()}
+              className='
+                h-10
+                w-10
+                flex
+                items-center
+                justify-center
+                rounded-full
+                bg-white
+                p-1
+                cursor-pointer
+              '
+            >
+              <Icon size={30} className="text-black"/>
+            </div>
+        }
       </div>
 
       {/* Desktop */}
@@ -137,7 +163,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         '>
           <AiFillStepBackward 
             onClick={onPlayPrevious}
-            size={30}
+            size={24}
             className="
               text-neutral-400
               cursor-pointer
@@ -145,25 +171,29 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
               transition
             "
           />
-          <div
-            onClick={() => sound.togglePlayPause()}
-            className='
-              flex
-              items-center
-              justify-center
-              h-10
-              w-10
-              rounded-full
-              bg-white
-              p-1
-              cursor-pointer
-            '
-          >
-            <Icon size={30} className="text-black"/>
-          </div>
+
+          {
+            sound.isLoading
+            ? <CircularProgress size={32} color="inherit" />
+            : <div
+                onClick={() => sound.togglePlayPause()}
+                className='
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  p-1
+                  cursor-pointer
+                '
+              >
+                <Icon size={24} className="text-black"/>
+              </div>
+          }
+          
           <AiFillStepForward 
             onClick={onPlayNext}
-            size={30}
+            size={24}
             className="
               text-neutral-400
               cursor-pointer
@@ -172,24 +202,45 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
             "
           />
         </div>
+        
+        <div className="flex flex-row gap-x-3 items-center">
+          <span className='text-neutral-400 text-xs'>{formatTime(position)}</span>
+          <Slider 
+            size="small"
+            color="primary"
+            
+            value={Math.round(position)}
+            onChange={handleTimeChange}
+            onMouseUp={handleTimeChangeCommit}
+            max={Math.round(sound.duration)}
+            step={1}
+            aria-label="Track"
+          />
+          <span className='text-neutral-400 text-xs'>{formatTime(sound.duration)}</span>
+        </div>
       </div>
       
       <div className="hidden md:flex w-full justify-end pr-2">
-        <div className="flex items-center gap-x-2 w-[120px]">
+        <div className="flex items-center gap-x-3 w-[120px]">
           <VolumeIcon 
             onClick={handleMuteToggle}
             className="cursor-pointer"
-            size={34}
+            size={30}
           />
           <Slider 
-            value={playlist.volume}
-            isMuted={playlist.isMuted}
+            size="small"
+            color="primary"
+            value={playlist.isMuted ? 0 : playlist.volume}
             onChange={handleChangeVolume}
+            max={1}
+            step={0.05}
+            aria-label="Volume"
           />
         </div>
       </div>
 
     </div>
+    </ThemeProvider>
   )
 }
 
