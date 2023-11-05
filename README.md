@@ -7,7 +7,7 @@ This is repository for my uncommercial Spotify-like music app. It is created to 
 ## Key Features
 - Song upload
 - Full responsiveness for all devices
-- Credential authentication with Supabase
+- Credentials, Google authentication with Supabase
 - File and image upload using Supabase storage
 - Play song audio
 - Favorites system
@@ -15,7 +15,7 @@ This is repository for my uncommercial Spotify-like music app. It is created to 
 - Advanced Player component
 
 ## In Dev
-- Github/Google authentication integration, and maybe more after
+- More authentication providers after
 - Custom user playlists
 - Profile settings
 - The whole album download with multiple songs at the same time

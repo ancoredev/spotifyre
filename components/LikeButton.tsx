@@ -2,7 +2,7 @@
 
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
-import { FC, useEffect, useLayoutEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 
 import useAuthModal from '@/hooks/useAuthModal';

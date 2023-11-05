@@ -7,18 +7,16 @@ const useAudioTime = () => {
   const { getPosition } = useGlobalAudioPlayer()
   
   useEffect(() => {
-      const animate = () => {
-          setPosition(getPosition())
-          trackerRef.current = requestAnimationFrame(animate)
+    const animate = () => {
+      setPosition(getPosition())
+      trackerRef.current = requestAnimationFrame(animate)
+    }
+    trackerRef.current = window.requestAnimationFrame(animate)
+    return () => {
+      if (trackerRef.current) {
+        cancelAnimationFrame(trackerRef.current)
       }
-
-      trackerRef.current = window.requestAnimationFrame(animate)
-
-      return () => {
-          if (trackerRef.current) {
-              cancelAnimationFrame(trackerRef.current)
-          }
-      }
+    }
   }, [getPosition])
   
   return { position, setPosition, trackerRef };
