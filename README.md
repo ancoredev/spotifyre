@@ -1,6 +1,7 @@
 # SpotifyRE
 
 Demo waits here: https://spotifyre-eight.vercel.app/
+(on maintenance now)
 
 This is repository for my uncommercial Spotify-like music app. It is created to improve coding skills and learning new features and technologies.
 
